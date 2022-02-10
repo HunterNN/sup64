@@ -1,0 +1,22 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+uid="uid://c2lfri5d74udc"
+path="res://.godot/imported/Warp Jingle.wav-96be3022cbb2841fa18e8b588f414495.sample"
+
+[deps]
+
+source_file="res://assets/musics/Warp Jingle.wav"
+dest_files=["res://.godot/imported/Warp Jingle.wav-96be3022cbb2841fa18e8b588f414495.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

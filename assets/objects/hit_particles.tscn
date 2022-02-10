@@ -1,0 +1,40 @@
+[gd_scene load_steps=5 format=3 uid="uid://7yurpwias7iu"]
+
+[ext_resource type="AudioStream" uid="uid://b0mkhx8uaq5yr" path="res://assets/sounds/impactMetal_002.ogg" id="1_yjdk4"]
+
+[sub_resource type="ParticlesMaterial" id="ParticlesMaterial_q2ns4"]
+direction = Vector3(0, -1, 0)
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 30.0
+initial_velocity_max = 50.0
+scale_max = 3.0
+
+[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_skahm"]
+transparency = 1
+albedo_color = Color(0.423529, 1, 0.537255, 0.427451)
+emission_enabled = true
+emission = Color(0.313726, 1, 0.407843, 1)
+emission_energy = 100.0
+backlight = Color(1, 1, 1, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_8eyq4"]
+material = SubResource( "ORMMaterial3D_skahm" )
+radius = 0.1
+height = 0.2
+radial_segments = 4
+rings = 2
+
+[node name="GPUParticles3D" type="GPUParticles3D"]
+emitting = false
+amount = 10
+lifetime = 0.1
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource( "ParticlesMaterial_q2ns4" )
+draw_pass_1 = SubResource( "SphereMesh_8eyq4" )
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource( "1_yjdk4" )
+unit_db = -5.0
+unit_size = 50.0
+autoplay = true
