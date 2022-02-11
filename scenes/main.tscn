@@ -1,5 +1,6 @@
-[gd_scene load_steps=13 format=3 uid="uid://dq8t0n4vk14fe"]
+[gd_scene load_steps=14 format=3 uid="uid://bv3vrp4e3hljh"]
 
+[ext_resource type="Material" uid="uid://b4p3kppm5siox" path="res://assets/shaders/n64.tres" id="1_ego1p"]
 [ext_resource type="PackedScene" uid="uid://h47p48ryxo6a" path="res://assets/objects/soldier.tscn" id="1_h6buy"]
 [ext_resource type="Texture2D" uid="uid://dxpgino0rd3sw" path="res://addons/kenney_prototype_textures/light/texture_07.png" id="1_v4yyx"]
 [ext_resource type="Script" path="res://scripts/interpolatet_camera/interpolated_camera_3d.gd" id="2_0fplu"]
@@ -37,6 +38,7 @@ data = PackedVector3Array(0, 1, 0, 0, 1, 0, 0, 0.9924, -0.0868, 0, 1, 0, -0.0085
 [node name="Node3D" type="Node3D"]
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+material = ExtResource( "1_ego1p" )
 anchor_right = 1.0
 anchor_bottom = 1.0
 stretch = true
@@ -89,6 +91,7 @@ skeleton = NodePath("../../../..")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.75887, 0)
 speed = 30.0
 mouse_sensitive = 0.003
+audio_effect_value = 0.0
 
 [node name="CameraTargetTarget" type="Position3D" parent="SubViewportContainer/SubViewport/Player/Soldier"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.791048, 0.132397)
@@ -105,3 +108,4 @@ target = NodePath("../Soldier/CameraTargetTarget/CameraTarget")
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( "4_48812" )
 autoplay = true
+bus = &"Teleporter"

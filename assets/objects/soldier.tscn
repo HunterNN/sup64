@@ -1,28 +1,48 @@
-[gd_scene load_steps=24 format=3 uid="uid://h47p48ryxo6a"]
+[gd_scene load_steps=29 format=3 uid="uid://h47p48ryxo6a"]
 
 [ext_resource type="AudioStream" uid="uid://d1oc1gpc8cwgm" path="res://assets/sounds/pepSound3.ogg" id="1_f8hbv"]
+[ext_resource type="Shader" path="res://assets/shaders/warp.gdshader" id="1_obb1k"]
+[ext_resource type="AudioStream" uid="uid://w85etmyo0mbg" path="res://assets/sounds/sfx_sounds_interaction11.wav" id="2_fuf66"]
 
 [sub_resource type="GDScript" id="GDScript_m5beq"]
 script/source = "extends CharacterBody3D
 
 @export var speed := 5.0
+@export var teleportation_factor := 40
 @export var acceleration := 1.0
 @export var jump_force := 24
 @export var mouse_sensitive := 0.002
 @export var player_max_yaw_angle := 0.3
 @export var player_min_yaw_angle := -0.3
+@export var audio_effect_value := 0.0
 
 # Get the gravity from the project settings to be synced with RigidDynamicBody nodes.
-var gravity : float = ProjectSettings.get_setting(\"physics/3d/default_gravity\")
-var playback : AnimationNodeStateMachinePlayback
+var gravity: float = ProjectSettings.get_setting(\"physics/3d/default_gravity\")
+var playback: AnimationNodeStateMachinePlayback
+var teleporting := false
+var teleported := false
+var teleportation_direction: Vector3
+var audio_effect: AudioEffectBandPassFilter
+var pre_teleport_position: Vector3
 
 func _init() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	var index := AudioServer.get_bus_index(\"Teleporter\") as int
+	audio_effect = AudioServer.get_bus_effect(index, 0) as AudioEffectBandPassFilter
+	audio_effect_value = 0
 	
 func _ready() -> void:
 	playback = $AnimationTree[\"parameters/StateMachine/playback\"]
 
 func _physics_process(delta: float) -> void:
+	if teleported:
+		motion_velocity -= teleportation_direction
+		var teleport_position_diff := position - pre_teleport_position;
+		teleport_position_diff = teleport_position_diff.rotated(Vector3.DOWN, rotation.y)
+		($\"Armature/Skeleton3D/Cube\" as MeshInstance3D).material_overlay.set_shader_param(\"target_shift\", teleport_position_diff)
+		($TeleportAnimation as AnimationPlayer).play(\"Teleport\")
+		teleported = false
+	
 	# Add the gravity.
 	if not is_on_floor():
 		motion_velocity.y -= gravity * delta * 4
@@ -47,10 +67,18 @@ func _physics_process(delta: float) -> void:
 			motion_velocity.x = move_toward(motion_velocity.x, 0, acceleration)
 			motion_velocity.z = move_toward(motion_velocity.z, 0, acceleration)
 			playback.travel(\"Standing\")
-		
+	
+	if teleporting:
+		teleportation_direction = direction * teleportation_factor
+		motion_velocity += teleportation_direction
+		teleported = true
+		teleporting = false
+		pre_teleport_position = position
+
 	move_and_slide()
 
 func _process(delta: float) -> void:
+	audio_effect.resonance = audio_effect_value
 	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 		if $ShootTimer.is_stopped():
 			$ShootTimer.start()
@@ -64,7 +92,11 @@ func _input(event: InputEvent) -> void:
 			$CameraTargetTarget.rotation.x = player_max_yaw_angle
 		if $CameraTargetTarget.rotation.x < player_min_yaw_angle:
 			$CameraTargetTarget.rotation.x = player_min_yaw_angle
-
+		
+	elif event is InputEventMouseButton:
+		var mouse_event := event as InputEventMouseButton
+		if mouse_event.pressed and mouse_event.button_index == MOUSE_BUTTON_RIGHT:
+			teleporting = true
 
 func _on_shoot_timer_timeout() -> void:
 	var bullet := load(\"res://assets/objects/bullet.tscn\") as PackedScene
@@ -75,6 +107,14 @@ func _on_shoot_timer_timeout() -> void:
 	get_tree().root.add_child(bullet_instance)
 	($AnimationPlayer as AnimationPlayer).play(\"Shoot\")
 "
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_yfs1p"]
+render_priority = 0
+shader = ExtResource( "1_obb1k" )
+shader_param/alpha = 1.0
+shader_param/object_radius = 4.0
+shader_param/progress = 0.0
+shader_param/target_shift = null
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cvuuy"]
 resource_name = "Material"
@@ -612,6 +652,62 @@ node_connections = [&"output", 0, &"StateMachine"]
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id="AnimationNodeStateMachinePlayback_c7qgq"]
 
+[sub_resource type="Animation" id="Animation_xtrla"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Armature/Skeleton3D/Cube:material_overlay:shader_param/progress")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.0]
+}
+
+[sub_resource type="Animation" id="Animation_fv7cd"]
+resource_name = "Teleport"
+length = 0.5
+step = 0.01
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:audio_effect_value")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"points": PackedFloat32Array(0, -0.249994, -0.00368596, 0.12, 0.0017693, 1, 0.8, -0.250009, -0.00227729, 0.24, 0.00218612, 1, -0.00033712, -0.14, 0.00210642, 0.249994, -0.00376138, 1),
+"times": PackedFloat32Array(0, 0.2, 0.4)
+}
+tracks/1/type = "audio"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("TeleportSound")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"clips": [{
+"end_offset": 0.188971,
+"start_offset": 0.0,
+"stream": ExtResource( "2_fuf66" )
+}],
+"times": PackedFloat32Array(0)
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Armature/Skeleton3D/Cube:material_overlay:shader_param/progress")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.21),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 1.0]
+}
+
 [node name="Soldier" type="CharacterBody3D"]
 script = SubResource( "GDScript_m5beq" )
 
@@ -624,7 +720,7 @@ bones/0/name = "Bone"
 bones/0/parent = -1
 bones/0/rest = Transform3D(0.998413, -0.044232, -0.034865, 0.0421927, 0.99747, -0.0572047, 0.0373071, 0.0556428, 0.997754, -7.20902e-07, -0.257205, -0.214337)
 bones/0/enabled = true
-bones/0/position = Vector3(-7.20902e-07, -0.257205, -0.214337)
+bones/0/position = Vector3(-3.85843e-07, -0.137662, -0.114718)
 bones/0/rotation = Quaternion(0, 0, 0, 1)
 bones/0/scale = Vector3(1, 1, 1)
 bones/1/name = "Bone.001"
@@ -632,7 +728,7 @@ bones/1/parent = 0
 bones/1/rest = Transform3D(-0.998616, -0.00508444, 0.0523452, -0.00391853, 0.999743, 0.022352, -0.0524454, 0.022116, -0.998379, 1.86265e-09, 0.88413, 7.38668e-15)
 bones/1/enabled = true
 bones/1/position = Vector3(1.86265e-09, 0.88413, 7.38668e-15)
-bones/1/rotation = Quaternion(-0.00225166, 0.999592, 0.0111215, 0.0262084)
+bones/1/rotation = Quaternion(-0.0114182, 0.999452, 0.0139988, 0.0277379)
 bones/1/scale = Vector3(1, 1, 1)
 bones/2/name = "Bone.002"
 bones/2/parent = 1
@@ -646,7 +742,7 @@ bones/3/parent = 2
 bones/3/rest = Transform3D(0.981435, 0.0024304, 0.191778, 0.0107113, 0.997665, -0.067459, -0.191494, 0.0682609, 0.979117, 4.65661e-10, 0.420032, 3.55271e-15)
 bones/3/enabled = true
 bones/3/position = Vector3(4.65661e-10, 0.420032, 3.55271e-15)
-bones/3/rotation = Quaternion(0.0341086, 0.0963223, 0.00208112, 0.994763)
+bones/3/rotation = Quaternion(0.0403584, 0.0965174, -0.00160053, 0.994511)
 bones/3/scale = Vector3(1, 1, 1)
 bones/4/name = "Bone.002_L"
 bones/4/parent = 2
@@ -798,12 +894,13 @@ bones/24/scale = Vector3(1, 1, 1)
 
 [node name="Cube" type="MeshInstance3D" parent="Armature/Skeleton3D"]
 transform = Transform3D(1, 0, 1.86265e-09, 0, 1, 0, -1.86265e-09, 0, 1, 0, 0, 0)
+material_overlay = SubResource( "ShaderMaterial_yfs1p" )
 gi_mode = 1
 mesh = SubResource( "ArrayMesh_onq4g" )
 skin = SubResource( "Skin_4t7p4" )
 
 [node name="BoneAttachment3D" type="BoneAttachment3D" parent="Armature/Skeleton3D"]
-transform = Transform3D(-0.0955917, 0.120231, 0.714463, 0.717473, -0.0844909, 0.110212, 0.100736, 0.715861, -0.106989, 0.0155668, 1.48086, 1.22476)
+transform = Transform3D(-0.109136, 0.119473, 0.712647, 0.715044, -0.0860614, 0.12393, 0.104186, 0.715801, -0.104047, -0.00480671, 1.59288, 1.32888)
 bone_name = "Bone.002_L.004"
 bone_idx = 8
 
@@ -851,5 +948,16 @@ one_shot = true
 
 [node name="JumpSound" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource( "1_f8hbv" )
+bus = &"Teleporter"
+
+[node name="TeleportAnimation" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( "Animation_xtrla" )
+anims/Teleport = SubResource( "Animation_fv7cd" )
+
+[node name="TeleportSound" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource( "2_fuf66" )
+unit_db = 1.0
+unit_size = 30.0
+bus = &"Teleporter"
 
 [connection signal="timeout" from="ShootTimer" to="." method="_on_shoot_timer_timeout"]

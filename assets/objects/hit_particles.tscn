@@ -38,3 +38,4 @@ stream = ExtResource( "1_yjdk4" )
 unit_db = -5.0
 unit_size = 50.0
 autoplay = true
+bus = &"Teleporter"
