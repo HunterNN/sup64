@@ -6,6 +6,7 @@ cutoff_hz = 100.0
 resonance = 0.0
 
 [resource]
+bus/0/volume_db = -12.4611
 bus/1/name = &"Teleporter"
 bus/1/solo = false
 bus/1/mute = false

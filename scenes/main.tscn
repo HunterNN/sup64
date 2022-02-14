@@ -1,9 +1,10 @@
-[gd_scene load_steps=14 format=3 uid="uid://bv3vrp4e3hljh"]
+[gd_scene load_steps=15 format=3 uid="uid://bv3vrp4e3hljh"]
 
 [ext_resource type="Material" uid="uid://b4p3kppm5siox" path="res://assets/shaders/n64.tres" id="1_ego1p"]
 [ext_resource type="PackedScene" uid="uid://h47p48ryxo6a" path="res://assets/objects/soldier.tscn" id="1_h6buy"]
 [ext_resource type="Texture2D" uid="uid://dxpgino0rd3sw" path="res://addons/kenney_prototype_textures/light/texture_07.png" id="1_v4yyx"]
 [ext_resource type="Script" path="res://scripts/interpolatet_camera/interpolated_camera_3d.gd" id="2_0fplu"]
+[ext_resource type="PackedScene" uid="uid://trirvu7neis0" path="res://assets/objects/gliting-beast/gliting-beast.tscn" id="2_yumce"]
 [ext_resource type="AudioStream" uid="uid://b2pbgms8ftfuj" path="res://assets/musics/Venus.wav" id="4_48812"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_872na"]
@@ -73,6 +74,10 @@ surface_material_override/0 = SubResource( "ORMMaterial3D_jg7kq" )
 [node name="@@18340" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/Floor/StaticBody3D"]
 shape = SubResource( "ConcavePolygonShape3D_xdclt" )
 
+[node name="GlitingBeast" parent="SubViewportContainer/SubViewport" instance=ExtResource( "2_yumce" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.56512, 3.51042, -4.67816)
+player_path = NodePath("../Player/Soldier")
+
 [node name="StaticBody3D" type="StaticBody3D" parent="SubViewportContainer/SubViewport"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.49879, 2.87273, -14.7835)
 
@@ -88,10 +93,9 @@ skeleton = NodePath("../../../..")
 [node name="Player" type="Node" parent="SubViewportContainer/SubViewport"]
 
 [node name="Soldier" parent="SubViewportContainer/SubViewport/Player" instance=ExtResource( "1_h6buy" )]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.75887, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.75887, 6.31158)
 speed = 30.0
 mouse_sensitive = 0.003
-audio_effect_value = 0.0
 
 [node name="CameraTargetTarget" type="Position3D" parent="SubViewportContainer/SubViewport/Player/Soldier"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.791048, 0.132397)

@@ -1,0 +1,21 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://bvlevon2em2uh"
+path="res://.godot/imported/gliding-beast.obj-512d139f7a1657c5c2711b2f6cd8b55a.mesh"
+
+[deps]
+
+files=["res://.godot/imported/gliding-beast.obj-512d139f7a1657c5c2711b2f6cd8b55a.mesh"]
+
+source_file="res://assets/objects/gliting-beast/gliding-beast.obj"
+dest_files=["res://.godot/imported/gliding-beast.obj-512d139f7a1657c5c2711b2f6cd8b55a.mesh", "res://.godot/imported/gliding-beast.obj-512d139f7a1657c5c2711b2f6cd8b55a.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true
