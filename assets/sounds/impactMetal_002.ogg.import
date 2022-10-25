@@ -1,7 +1,7 @@
 [remap]
 
 importer="oggvorbisstr"
-type="AudioStreamOGGVorbis"
+type="AudioStreamOggVorbis"
 uid="uid://b0mkhx8uaq5yr"
 path="res://.godot/imported/impactMetal_002.ogg-cb5c61dcbb2ad02806ecc5f6b2bcc4e2.oggvorbisstr"
 
@@ -14,3 +14,6 @@ dest_files=["res://.godot/imported/impactMetal_002.ogg-cb5c61dcbb2ad02806ecc5f6b
 
 loop=false
 loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

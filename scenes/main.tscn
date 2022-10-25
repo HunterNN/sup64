@@ -14,18 +14,18 @@ ground_bottom_color = Color(0.121569, 0.121569, 0.129412, 1)
 ground_horizon_color = Color(0.672549, 0.704902, 0.734314, 1)
 
 [sub_resource type="Sky" id="Sky_mqgxn"]
-sky_material = SubResource( "ProceduralSkyMaterial_872na" )
+sky_material = SubResource("ProceduralSkyMaterial_872na")
 
 [sub_resource type="Environment" id="Environment_6akb3"]
 background_mode = 2
-sky = SubResource( "Sky_mqgxn" )
+sky = SubResource("Sky_mqgxn")
 tonemap_mode = 2
 glow_enabled = true
 
 [sub_resource type="QuadMesh" id="QuadMesh_a8j4n"]
 
 [sub_resource type="ORMMaterial3D" id="ORMMaterial3D_jg7kq"]
-albedo_texture = ExtResource( "1_v4yyx" )
+albedo_texture = ExtResource("1_v4yyx")
 uv1_scale = Vector3(10, 10, 1)
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_xdclt"]
@@ -39,24 +39,24 @@ data = PackedVector3Array(0, 1, 0, 0, 1, 0, 0, 0.9924, -0.0868, 0, 1, 0, -0.0085
 [node name="Node3D" type="Node3D"]
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="."]
-material = ExtResource( "1_ego1p" )
+material = ExtResource("1_ego1p")
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 stretch = true
 stretch_shrink = 3
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
-audio_listener_enable_3d = true
 handle_input_locally = false
+audio_listener_enable_3d = true
 size = Vector2i(640, 360)
 size_2d_override_stretch = true
 render_target_update_mode = 4
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="SubViewportContainer/SubViewport"]
-environment = SubResource( "Environment_6akb3" )
+environment = SubResource("Environment_6akb3")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="SubViewportContainer/SubViewport"]
 transform = Transform3D(-0.910893, -0.412594, -0.00635457, -0.00977828, 0.00618724, 0.999933, -0.412527, 0.910894, -0.00967038, 0, 26.929, 0)
@@ -65,16 +65,16 @@ directional_shadow_max_distance = 250.0
 
 [node name="Floor" type="MeshInstance3D" parent="SubViewportContainer/SubViewport"]
 transform = Transform3D(252.769, 0, 0, 0, -1.10489e-05, 1.00001, 0, -252.769, -4.37119e-08, 0, 0, 0)
-mesh = SubResource( "QuadMesh_a8j4n" )
+mesh = SubResource("QuadMesh_a8j4n")
 skeleton = NodePath("../../..")
-surface_material_override/0 = SubResource( "ORMMaterial3D_jg7kq" )
+surface_material_override/0 = SubResource("ORMMaterial3D_jg7kq")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="SubViewportContainer/SubViewport/Floor"]
 
 [node name="@@18340" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/Floor/StaticBody3D"]
-shape = SubResource( "ConcavePolygonShape3D_xdclt" )
+shape = SubResource("ConcavePolygonShape3D_xdclt")
 
-[node name="GlitingBeast" parent="SubViewportContainer/SubViewport" instance=ExtResource( "2_yumce" )]
+[node name="GlitingBeast" parent="SubViewportContainer/SubViewport" instance=ExtResource("2_yumce")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.56512, 3.51042, -4.67816)
 player_path = NodePath("../Player/Soldier")
 
@@ -83,33 +83,33 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.49879, 2.87273, -14.7835)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/StaticBody3D"]
 transform = Transform3D(1.86038, 0, 0, 0, 1.86038, 0, 0, 0, 1.86038, 0, 0, 0)
-shape = SubResource( "ConcavePolygonShape3D_tshrw" )
+shape = SubResource("ConcavePolygonShape3D_tshrw")
 
 [node name="TestObject" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/StaticBody3D"]
 transform = Transform3D(1.86038, 0, 0, 0, 1.86038, 0, 0, 0, 1.86038, 0, 0, 0)
-mesh = SubResource( "CapsuleMesh_q3aqp" )
+mesh = SubResource("CapsuleMesh_q3aqp")
 skeleton = NodePath("../../../..")
 
 [node name="Player" type="Node" parent="SubViewportContainer/SubViewport"]
 
-[node name="Soldier" parent="SubViewportContainer/SubViewport/Player" instance=ExtResource( "1_h6buy" )]
+[node name="Soldier" parent="SubViewportContainer/SubViewport/Player" instance=ExtResource("1_h6buy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.75887, 6.31158)
 speed = 30.0
 mouse_sensitive = 0.003
 
-[node name="CameraTargetTarget" type="Position3D" parent="SubViewportContainer/SubViewport/Player/Soldier"]
+[node name="CameraTargetTarget" type="Marker3D" parent="SubViewportContainer/SubViewport/Player/Soldier"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.791048, 0.132397)
 
-[node name="CameraTarget" type="Position3D" parent="SubViewportContainer/SubViewport/Player/Soldier/CameraTargetTarget"]
+[node name="CameraTarget" type="Marker3D" parent="SubViewportContainer/SubViewport/Player/Soldier/CameraTargetTarget"]
 transform = Transform3D(1, 0, 0, 0, 0.938698, 0.344741, 0, -0.344741, 0.938698, 0, 4.14028, 11.4206)
 
 [node name="InterpolatedCamera3D" type="Camera3D" parent="SubViewportContainer/SubViewport/Player"]
 transform = Transform3D(1, 0, 0, 0, 0.950662, 0.310228, 0, -0.310228, 0.950662, 0, 8.24045, 9.56882)
 current = true
-script = ExtResource( "2_0fplu" )
+script = ExtResource("2_0fplu")
 target = NodePath("../Soldier/CameraTargetTarget/CameraTarget")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( "4_48812" )
+stream = ExtResource("4_48812")
 autoplay = true
 bus = &"Teleporter"

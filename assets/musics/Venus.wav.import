@@ -1,7 +1,7 @@
 [remap]
 
 importer="wav"
-type="AudioStreamSample"
+type="AudioStreamWAV"
 uid="uid://b2pbgms8ftfuj"
 path="res://.godot/imported/Venus.wav-ea525aef8e3f6bedd8ea042742a6f447.sample"
 
@@ -18,5 +18,7 @@ force/max_rate=false
 force/max_rate_hz=44100
 edit/trim=true
 edit/normalize=true
-edit/loop=true
+edit/loop_mode=2
+edit/loop_begin=0
+edit/loop_end=-1
 compress/mode=0

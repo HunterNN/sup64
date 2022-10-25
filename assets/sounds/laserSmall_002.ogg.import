@@ -1,7 +1,7 @@
 [remap]
 
 importer="oggvorbisstr"
-type="AudioStreamOGGVorbis"
+type="AudioStreamOggVorbis"
 uid="uid://dqjyy7nab1kyf"
 path="res://.godot/imported/laserSmall_002.ogg-0368c67b1c2e241f596b19a0c1871e68.oggvorbisstr"
 
@@ -14,3 +14,6 @@ dest_files=["res://.godot/imported/laserSmall_002.ogg-0368c67b1c2e241f596b19a0c1
 
 loop=false
 loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

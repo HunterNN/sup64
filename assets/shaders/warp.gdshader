@@ -4,7 +4,7 @@ uniform float alpha = 1.0;
 uniform float object_radius = 2.0;
 uniform float progress = 1.0;
 uniform vec3 target_shift = vec3(-10.0, 0.0, 10.0);
-uniform vec4 base_color : hint_color = vec4(1.0);
+uniform vec4 base_color : source_color = vec4(1.0);
 
 void fragment() {
 	ALPHA = alpha;
